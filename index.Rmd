@@ -1,0 +1,40 @@
+--- 
+title: "The Java Track"
+author: "Michiel Noback"
+site: bookdown::bookdown_site
+output:
+  bookdown::gitbook:
+    css: "style.css"
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This ebook accompanies the Java course track of bioinformatics at the Hanze University of Applied Science, Groningen (The Netherlands)."
+favicon: "favicon.ico"
+---
+
+
+# General introduction
+
+This gitbook accompanies several Java-based courses of the bioinformatics curriculum of the Hanze University of Applied Science. These courses include "Introduction Java", "Web-based information systems", "Application Design" and the minor "Application Design".
+
+It covers the basics of Java (Part I - III), some OO fundamentals (Part IV), Java for the web (Part V), JUnit testing (Part VI), Advanced design principles including Design Patterns (Part VII), and some tutorials on the Spring framework (Part VIII).  
+Copyright &copy; Michiel Noback (2019-2021)
+
+
+# Keyboard shortcuts 
+
+These are the most important keyboard shortcuts - the ones you should memorize (for Linux version):
+
+- **`alt + enter`** - context menu: solve problems & errors, create tests etc.
+- **`psvm` + Tab** - create `main()`
+- **`sout` + Tab** - create print statement
+- **`soutv` + Tab** - create print statement with variable
+- **`fori` + Tab** - create `for` loop`
+- **`^ + shift + R`** - run main()
+- **`shift + F6`** - rename variable, method or class
+- **`ctrl + N`** - generate code (getters and setters, constructors etc.)
+- **`ctrl + O`** - override methods
+- **`ctrl + R`** - repeat last run
+- **`ctrl + Q`** or **`F1`** - show Javadoc of selected method
+
