@@ -1,22 +1,81 @@
-# Objects: ninjas and growing cells {#first-look-at-objects}
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
 
-This chapter presents two independent discussions of what classes and objects are. The first "Ninjas" focuses on what an object is and does. The second, "Cells" also discusses object relationships and testing.
+# Objects and classes {#first-look-at-objects}
+
+This chapter presents two independent discussions of what classes and objects are.
+The first "Ninjas" focuses on what an object is and does, and how it relates to a class.
+The second, "Cells" also discusses object relationships and testing.
 
 ## Ninjas
 
-Suppose you are building a game with ninjas, trolls and all sorts of nasty creatures. 
-In an Object-Oriented programming environment such as Java you will start by defining the entities that play a role in the app you are developing.  
+Suppose you are creating a game with ninjas, trolls and all other sorts of nasty creatures.
+In an Object-Oriented Programming (OOP) environment such as Java you will start by defining the entities that play a role in the app you are developing.
 
-In this case, `Ninja` will be one of the entities, or **_Types_** populating the application. Other Types in this game may be `Troll`, `Game`, `Player`, `Weapon`, `ScoreBoard`, and so on. Each of these Types will have **_properties_** and **_behavior_**: things they _have_ and things they _can do_. 
+In this case, `Ninja` will be one of the entities, or ***Types*** populating the application.
+Other types in this game may be `Troll`, `Game`, `Player`, `Weapon`, `ScoreBoard`, and so on.
+Each of these Types will have ***properties*** and ***behavior***: things they *have* and things they *can do*.
 
-A Type is represented by a blueprint, its class. Such a class resides in a single source file. In the Java core packages many types are predefined. There are very basic types, for instance `Integer` (representing whole numbers) and `String` (representing character data) but there are also more complex Types, such as `LocalDate`. When programming you will create novel Types all the time. A `Ninja` type for instance.
+A Type is represented by a blueprint, its ***class***.
+In Java, a class resides in a single source file *with the same name as the class*.
+This is unlike for instance Python in which there is no such enforced rule.
+The class of a type specifies how it should be created and initialized when needed.
+Here is an extremely simple class that is defined within source file `Ninja.java`.
 
-We'll have a look at the `Ninja` type and create a blueprint for it. In our game, Ninjas can do what you expect of them: they have a name and an energy level (0 means they're dead, 100 is freshly spawned), they have a position in the game and they can move, and attack their opponents.
-There's more of course but let's keep things simple for now.
+```{.java}
+class Ninja {
+    String name;
+    
+    void fight() {
+        System.out.println(name + " is fighting. Hack hack swoosh.");
+    }
+}
+```
 
-Given the above description, this is a first draft of a Ninja class that I came up with.
+And we can create an instance of the Ninja type like this:
 
-```java
+```{.java}
+Ninja silentKiller = new Ninja();
+```
+
+Although the code is simple enough, a lot is going on here, some visible and some invisible.
+
+1.  We defined a blueprint using the keyword `class`, followed by the name of the type (`Ninja`).\
+2.  Class `Ninja` resides in file `Ninja.java`\
+3.  Every `Ninja` that will ever be created will have a `name` property (also called instance variable) and `fight()` behavior. The `fight()` behavior will be "dependent" on its `name`.
+4.  An instance of a class is created using the `new` keyword, followed by the class name with a pair of parentheses: `Ninja()`. `Ninja()` is *calling the constructor (method)*. There is no constructor method here of course, but we got it for free from the compiler. It's the same with Python; you can give a class an `__init__()` method but if your don't the objects will still be constructed.
+5.  Class names are nouns starting with uppercase, (instance) variables are nouns starting with lowercase and methods are verbs starting with lowercase. All names are in ***CamelCase***.
+6.  Whenever an instance is created, its properties are initialized to their default values, unless specified otherwise. A `String` property will be `null`, and an `int` will be `0`. If you want properties to have other initial values you can specify that within the class:
+
+```{.java}
+class Ninja {
+    String name = "The Black One";
+    
+    void fight() {
+        System.out.println(name + " is fighting. Hack hack swoosh.");
+    }
+}
+```
+
+In the Java core packages many types are predefined.
+There are basic types, for instance `Integer` (representing whole numbers) and `String` (representing character data) but there are also more complex Types, such as `LocalDate`.
+When programming you will create novel Types all the time.
+A `Ninja` type for instance.
+
+> Java also has non-object types.
+> These are the *primitive* types representing numbers and logicals.
+> They are easily recognized because their names start with lowercase: `int`, `double` etc.
+> More on primitive types later.
+
+We'll have a another look at the `Ninja` type and create a slightly more realistic blueprint for it.
+In our game, Ninjas can do what you would expect of them: they have a name and an energy level (0 means they're dead, 100 is freshly spawned), they have a position in the game and they can move, and attack their opponents.
+
+Given the above description, this is a second version of a Ninja class.
+
+```{.java}
 //package defines namespace
 package nl.bioinf.nomi.ninjas;
 
@@ -46,15 +105,24 @@ class Ninja {
 }
 ```
 
-I kept this class really clean - no access modifiers (`public`, `private`, `static`, etc) that will distract from the key points being made here. 
+I kept this class really clean - no access modifiers (`public`, `private`, `static`, etc) that will distract from the key points being made here.
 
-At the top of the file there is a **_package declaration_**. This defines the namespace this class lives in. Since nobody in their right mind would use my web domain, I'm pretty sure the fully qualified name `nl.bioinf.nomi.ninjas.Ninja` will uniquely point to this class. Think about it: how many `User` classes will have been designed over the world?
+At the top of the file there is a ***package declaration***.
+This defines the namespace this class lives in.
+Since nobody in their right mind would use my web domain, I'm pretty sure the *fully qualified name* `nl.bioinf.nomi.ninjas.Ninja` will uniquely point to this class.
+Think about it: how many `User` classes will have been designed over the world, and how can you make distinction between those, especially when you use more than one in a single code base?
 
-Next, there is the line `class Ninja {` which delimits the actual **_class body_**. No code except for the package declaration and import statements can live outside the class body - it will not compile.
+Next, there is the line `class Ninja {` which delimits the actual **class body**.
+No code except for the package declaration and import statements can live outside the class body - it will not compile.
 
-Below the class name declaration you find its **_instance variables_**. These define the properties that all instances (created objects) of this class will have. You can see only one of the instance variables has an assigned value: `energyLevel`. This means that every Ninja will have an energy level of 100 once it is constructed. Do the other variables have no value? Yes they do; if a value is not declared for instance variables they will get the **_default value_** of the type. For object types this is `null`, for boolean it is `false` and for numeric types it is `0`. So this:
+Below the class name declaration you find its instance variables.
+You can see only one of the instance variables has an assigned value: `energyLevel`.
+This means that every Ninja will have an energy level of 100 once it is constructed.
+The other variables will get the default value of the type.
+For object types this is `null`, for boolean it is `false` and for numeric types it is `0`.
+So this:
 
-```java
+``` {.java}
     String name;
     int energyLevel = 100;
     double topCoordinate;
@@ -63,30 +131,56 @@ Below the class name declaration you find its **_instance variables_**. These de
 
 is exactly te same as this:
 
-```java
+``` {.java}
     String name = null;
     int energyLevel = 100;
     double topCoordinate = 0;
     double leftCoordinate = 0;
 ```
 
-Within the class body, no free-living statements are allowed other than declaration and assignment of its instance variables. So these are allowed:
-`double leftCoordinate;` and `int energyLevel = 100;`, but a `for`-loop is not.
+Within the class body, no statements are allowed other than declaration and assignment of its instance variables.
+All other statements should reside withing a method.
+So these are allowed: `double leftCoordinate;` and `int energyLevel = 100;`, but a `for`-loop is not.
+For example, this is illegal and will not compile (although the error message may be less than straightforward):
 
-Finally, there are two **_methods_** defined: `move()` and `attack()`. Method `move()` is pretty straightforward; it changes the location of the Ninja object on which the method is called (we call this the _current_ object) by the given lateral and vertical offsets. The use of `this.` indicates we are accessing the current objects' instance variables. Use of `this.` is not required but strongly encouraged. The method does not return anything, as declared by the `void` return statement.
+``` {.java}
+class Ninja {
+    String name;
+    
+    System.out.println("Roaming the Ninja class body");
+    
+    void fight() {
+        System.out.println(name + " is fighting. Hack hack swoosh.");
+    }
+}
+```
 
-The next method, `attack()` is a little more complex. Its **_signature_**  
-
-```java 
-void attack(int power, GameCharacter opponent){ }
-```  
-
-says it should receive a `power` value for its attack as well as an instance of the `GameCharacter` class (below) which will be the subject of the attack. 
-Not only does it operate on its own instance variables, but also it also **_calls_** a method on the object it is attacking: `opponent.drainEnergy(power * 2);`. This method does not return anything either.
-
-Here is the `GameCharacter` class:
+Finally, there are two methods defined: `move()` and `attack()`.
+Method `move()` is pretty straightforward.
 
 ```java
+    void move(double top, double left) {
+        this.topCoordinate += top;
+        this.leftCoordinate += left;
+    }
+```
+
+It changes the location of the Ninja object on which the method is called -the *current* object- by the given lateral and vertical offsets. Note the use of the `+=` operator. The statement `x += 2` is the same as `x = x + 2`.
+The use of `this.` indicates we are accessing the current objects' instance variables and methods.
+Use of `this.` is not required unless there is a naming conflict, but strongly encouraged.
+The method does not return anything; this is declared by the `void` return statement.
+
+The next method, `attack()` is a little more complex.
+this is its ***signature***:
+
+``` {.java}
+void attack(int power, GameCharacter opponent)
+```
+
+It says it should receive a `power` value for its attack as well as an instance of the `GameCharacter` class (below) which will be the subject of the attack. This method does not return anything either.
+Here is the `GameCharacter` class:
+
+``` {.java}
 package nl.bioinf.nomi.ninjas;
 
 public class GameCharacter {
@@ -98,10 +192,17 @@ public class GameCharacter {
 }
 ```
 
-Here is some usage within a class called `Game`. The `main()` method has been discussed in the previous chapter.
-This is the first place we see the `new` keyword. Whenever you see the `new` keyword, it means a new object is instantiated of the type specified after `new`. So `new Ninja();` means a new Ninja instance (object) has been created, inwhich the instance variables have been created and given their specified values, or the default values discussed above. See the section later in this chapter for more details on object construction. 
+So, not only does `attack()` operate on its own instance variables, it also also ***calls*** a method on the object it is attacking: `opponent.drainEnergy(power * 2);`.
 
-```java
+
+Here is some example code usages within a class called `Game`.
+The `main()` method is the _entry point_ of this application, as discussed in a previous chapter.
+This is the second place we see the `new` keyword.
+Whenever you see the `new` keyword, it means a new object is instantiated of the type specified after `new`.
+So `new Ninja();` means a new Ninja instance (object) has been created, in which the instance variables have been created and given their specified values, or the default values discussed above.
+See the section later in this chapter for more details on object construction.
+
+``` {.java}
 package nl.bioinf.nomi.ninjas;
 
 public class Game {
@@ -112,9 +213,9 @@ public class Game {
         //change its name
         ninja.name = "Rogue Bastard";
         //print some values of the ninja
-        System.out.println("Ninja name      = " + ninja.name);
-        System.out.println("Ninja energy    = " + ninja.energyLevel);
-        System.out.println("Ninja position  = ["
+        System.out.println("Ninja name     = " + ninja.name);
+        System.out.println("Ninja energy   = " + ninja.energyLevel);
+        System.out.println("Ninja position = ["
                 + ninja.topCoordinate
                 + ":"
                 + ninja.leftCoordinate
@@ -144,8 +245,9 @@ public class Game {
 }
 ```
 
-The terminal output, when `main(0)` is run, will be:
+The terminal output, when `main()` is run, will be:
 
+```{=html}
 <pre class="console_out">
 Ninja name      = Rogue Bastard
 Ninja energy    = 100
@@ -155,39 +257,42 @@ Ninja energy    = 95
 Opponent name   = Delirious Troll
 Opponent energy = 90
 </pre>
+```
 
+This concludes a first acquaintance with classes and objects. We have used the core Java class `String`, and defined three of our own: `Ninja`, `GameCharacter` and `Game`.
+Besides this, we have used the _primitive types_ `int` and `double`.
 
-That's a first acquaintance with classes and objects. We have used the core Java class `String`, and defined three of our own: `Ninja`, `GameCharacter` and `Game`. Besides this, we have used the **_primitive types_** `int` and `double`. 
-
-Next up: Cells and TestTubes in a second round of getting to know objects. As extra layer, JUnit testing will be introduced.
-
+Next up: Cells and TestTubes in a second round of getting to know objects.
+As extra layer, JUnit testing will be introduced as a more structured means of verifying and demonstrating use of your created code.
 
 ## Growing cells
 
-Suppose you want to build a cell growth simulation application. 
-After careful analysis of the domain you decided that this involves three entities: 
-A simulator that controls the simulation process, a test tube that will hold the cells that are growing, and the cells themselves.
+This sections already peeks ahead to some more advanced topics, such as exceptions and flow control, to create a more realistic application. Don't worry if you don't get everything at once. They will be discussed in length later in the book. All code can be found in the `snippets` package of the JavaIntroProgrammingAssignments repository. 
 
-The next step in a modeling process is to determine the **_relationships_** between the different entities. 
-In this case this is as follows. The simulator will receive configuration 
-arguments (e.g. how many cells to grow) from the command-line, start the 
-simulation process and instantiate a test tube. 
-The test tube will be responsible for instantiating the initial cell
-population. Finally, there will be cells growing within the test tube.
+Suppose you want to build a cell growth simulation application.
+After careful analysis of the domain you decided that this involves three entities: A simulator that controls the simulation process, a test tube that will hold the cells that are growing, and the cells themselves.
+
+The next step in the modeling process is to determine the ***relationships*** between the different entities.
+In this case the relationships / interactions are as follows.
+The simulator will receive configuration arguments (e.g. how many cells to grow) from the command-line, _start_ the simulation process and _instantiate a test tube_.
+The test tube will be responsible for _instantiating the initial cell population_.
+Finally, there will be cells _growing_ within the test tube.
 
 Three separate source files are created (within a single package), each holding one class:
 
-- `CellGrowthSimulator.java`
-- `TestTube.java`
-- `Cell.java`
+-   `CellGrowthSimulator.java`
+-   `TestTube.java`
+-   `Cell.java`
 
-#### Cell.java {-}
+Each of these will be discussed in more detail.
 
-We'll start with the simplest one: Cell. 
-It has an instance variable called "size" which has a default value of 5 when Cell objects are instantiated. 
+#### Cell.java {.unnumbered}
+
+Let's start with the simplest one: Cell.
+It has an instance variable `size` which has a default value of 5 when Cell objects are instantiated.
 Every call of the `grow()` method makes it increase its size by one.
 
-```java
+``` {.java}
 package snippets.testtube;
 
 class Cell {
@@ -207,25 +312,29 @@ class Cell {
 ```
 
 To test the logic and correctness of this class we will have to wait until other components are developed, such as TestTube and CellGrowthSimulator.
-_Unless you use (J)Unit testing_. 
+***Unless you use (J)Unit testing***.
 
-#### JUnit testing {-}
+#### JUnit testing {.unnumbered}
 
-JUnit is a [unit testing](https://en.wikipedia.org/wiki/Unit_testing) framework for Java. 
-Its main purpose is to have a suite of test methods guaranteeing the correctness of your **_production code_**. 
-To create JUnit a test method, you need to have the JUnit libraries defined as dependencies on your **_class path_**. 
-See the post ["A first IntelliJ project"](/01_getting_started/intellij.md) for instructions how to that for JUnit5. This piece should be in your `build.gradle` file:
+JUnit is a [unit testing](https://en.wikipedia.org/wiki/Unit_testing) framework for Java.
+Its main purpose is to have a suite of test methods guaranteeing the correctness of your ***production code*** methods. Unit tests only test methods, not variables.
+To create JUnit a test method, you need to have the JUnit libraries defined as dependencies on your ***class path***.
+This piece should be in your `build.gradle` file:
 
-```gradle
+``` {.gradle}
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 }
 ```
 
-Next, you need to create a test class. Place the cursor on the class name (`Cell`) and press `alt+enter`. Select "Create Test".
+See the post ["A first IntelliJ project"](a-first-intellij-project.html) for more details on dependency management.
 
-![Create JUnit class](01_getting_started/figures/create_junit_test_class_1.png) 
+Next, you need to create a test class.
+In the editor, place the cursor on the class name (`Cell`) and press `alt+enter`.
+Select "Create Test".
+
+![Create JUnit class](01_getting_started/figures/create_junit_test_class_1.png)
 
 Select the method(s) you want to create test(s) for and press "OK".
 
@@ -233,7 +342,7 @@ Select the method(s) you want to create test(s) for and press "OK".
 
 The test class opens in the editor and looks something like this:
 
-```java
+``` {.java}
 package snippets.testtube;
 
 import org.junit.jupiter.api.Test;
@@ -249,7 +358,7 @@ class CellTest {
 
 Let's put some testing code in it to see whether our program logic works as intended:
 
-```java
+``` {.java}
     @Test
     void grow() {
         Cell cell = new Cell();
@@ -261,26 +370,41 @@ Let's put some testing code in it to see whether our program logic works as inte
     }
 ```
 
-When you click on the little green triangle in the editor margin, the test will be executed and you get output like this:
+The `assertTrue()` method call is key here. This and many related `assertXxxx()` methods are the core of the testing framework. Essentially, it comes down to specifying what you _expect_ the code to do. If that is not the case, the method will throw an error and your test fails.
+
+When you click on the little green triangle in the editor margin, the test will be executed and you get output like this on the lower panel of IntelliJ (it opens automatically):
 
 ![Create JUnit method](01_getting_started/figures/create_junit_test_method_1.png)
 
-The green checks indicate the test **_assertions_** passed. Knowing the Cell class is OK, let's proceed to class TestTube.
+The green checks indicate the test ***assertions*** passed. You should really experiment whith this a little bit: change the test (e.g. `assertTrue(cell.diameter == 7)`) or the production code, rerun the test and see what happens.
 
+For now, knowing the Cell class is OK, let's proceed to class TestTube.
 
-#### TestTube.java {-}
+#### TestTube.java {.unnumbered}
 
-TestTube is slightly more complex. 
-It defines a **_constructor_** that makes it mandatory to provide an initial number of cells. It will throw an `IllegalArgumentException` when a wrong value is passed for the `initialCellCount` parameter. You again see the use of the keyword `new` to instantiate Cell objects.  
+TestTube is slightly more complex. Note that much of the code is actually API documentation that describes how a method should be used in a formal way called Javadoc.
 
 ```java
+    /**
+     * Constructs with an initial cell count.
+     * An exception is thrown when the initial cell count is below 1 or above 10e4.
+     *
+     * @param initialCellCount the initial cell count
+     * @throws IllegalArgumentException ex
+     */
+```
+
+Here is the complete class.
+
+``` {.java}
 package snippets.testtube;
 
 class TestTube {
+    //an array of cells to be initialized later
     Cell[] cells;
 
     /**
-     * Constructs with an initial cell count.
+     * Constructs a TestTube with an initial cell count.
      * An exception is thrown when the initial cell count is below 1 or above 10e4.
      *
      * @param initialCellCount the initial cell count
@@ -298,7 +422,7 @@ class TestTube {
     }
 
     /**
-     * Grows the cells, in one single iteration.
+     * Grows all the cells withing this testtube in a single iteration.
      */
     void growCells() {
         for (Cell cell : cells) {
@@ -308,39 +432,59 @@ class TestTube {
 }
 ```
 
-Note the for-loop in the constructor of this class:
+Class `TestTube` defines a ***constructor***, `TestTube(int initialCellCount) {...}`, that makes it mandatory to provide an initial number of cells.
+It will throw an error -specifically an `IllegalArgumentException`- when a wrong value is passed for the `initialCellCount` parameter.
+You again see the use of the keyword `new` to instantiate Cell objects.
 
-```java
+There are two for-loops present in this class representing the two ways to perform iteration in Java. Here is the first, with a counter:
+
+``` {.java}
 for (int i = 0; i < initialCellCount; i++) {
     cells[i] = new Cell();
 }
 ```
 
-It has three elements between the parentheses: 
+It has three elements between the parentheses:
 
-```
-for (<LOOP INITIALIZATION>; <EXIT CONDITION>; <ITERATION INCREMENT>)
-```
+    for (<LOOP INITIALIZATION>; <EXIT CONDITION>; <ITERATION INCREMENT>)
 
-The for-loop itself will be dealt with in the post ["Flow control structures"](/02_syntax/flow_control_structures.md).  
+The for-loop itself will be dealt with in the post ["Flow control structures"](/flow_control_structures.html).
 
-Here is a JUnit test to verify the construction of the TestTube:
+The other for-loop does not use a counter - it simply iterates a collection:
 
 ```java
+    void growCells() {
+        for (Cell cell : cells) {
+            cell.grow();
+        }
+    }
+```
+
+Here are two JUnit test to verify the construction of the TestTube:
+
+``` {.java}
 class TestTubeTest {
     @Test
     void growCells() {
         TestTube testTube = new TestTube(10);
         assertTrue(testTube.cells.length == 10);
     }
+    
+    @Test
+    void growCells_withZeroInput() {
+        assertThrows(IllegalArgumentException.class, () -> new TestTube(0));
+    }    
 }
 ```
 
-#### CellGrowthSimulator.java {-}
+The first verifies that the array of cells has the size that was specified in the constructor and the second verifies that an exception is actually thrown when a zero size is passed.
 
-The last class of the system is `CellGrowthSimulator`. Here is a first version:
+#### CellGrowthSimulator.java {.unnumbered}
 
-```java
+The last class of the system is `CellGrowthSimulator`.
+Here is a first version:
+
+``` {.java}
 package snippets.testtube;
 /**
  * "Controller" class
@@ -368,42 +512,40 @@ class CellGrowthSimulator {
 }
 ```
 
-The `String[] args`  argument to `main()` is the argument array passed from the terminal when you start the application.
+The `String[] args` argument to `main()` is the argument array passed from the terminal when you start the application.
 
-(Be aware that this type of use of command-line arguments is discouraged; 
-you should implement and support a standards-adhering command-line syntax, 
-e.g. `java -jar GrowthSimulator --initial_count 5`).
+(Be aware that this type of use of command-line arguments is discouraged; you should implement and support a standards-adhering command-line syntax, e.g. `java -jar GrowthSimulator --initial_count 5`).
 
 The final model now has this chain of relationships:
 
-**_CellGrowthSimulator HAS-A TestTube and TestTube HAS one or more Cells_**.
-
+***CellGrowthSimulator HAS-A TestTube and TestTube HAS one or more Cells***.
 
 ## Object construction (first iteration)
 
-You have seen the `new` keyword used several times now. But what does happen, exactly, when you type
+You have seen the `new` keyword used several times now.
+But what does happen, exactly, when you type
 
-```java
+``` {.java}
 Cell cell = new Cell();
 ```
 
-The `new` keyword combined with the class name followed by parentheses 
-calls the _constructor_ method of that class. 
-The constructor instantiates an instance of the class and returns the reference to the object. 
-The parentheses `()` enclose the argument list for the constructor method, which is empty in this case. 
-In class `TestTube` we _did_ see a constructor argument however - one specifying the number of cells to grow.
+The `new` keyword combined with the class name followed by parentheses calls the *constructor* method of that class.
+The constructor instantiates an instance of the class and returns the reference to the object.
+The parentheses `()` enclose the argument list for the constructor method, which is empty in this case.
+In class `TestTube` we *did* see a constructor argument however - one specifying the number of cells to grow.
 
-The three steps of object construction are **_declaration_**, **_creation_** and **_assignment_**:
+The three steps of object construction are ***declaration***, ***creation*** and ***assignment***:
 
-1. The code `Cell cell` **_declares_** a variable of type Cell.
-2. The code `new Cell()` **_instantiates_** an object of type Cell, stores this in memory and returns a reference to this stored object.
-3. The equals sign `=` **_assigns_** (couples) the returned reference to the declared variable.
+1.  The code `Cell cell` ***declares*** a variable of type Cell.
+2.  The code `new Cell()` ***instantiates*** an object of type Cell, stores this in memory and returns a reference to this stored object.
+3.  The equals sign `=` ***assigns*** (couples) the returned reference to the declared variable.
 
-So...where is this constructor method in class Cell and what does it do? 
+So...where is this constructor method in class Cell and what does it do?
 If you look at the class you don't see a constructor, as we have seen in class `TestTube`.
-It is created by the Java compiler if you don't specify it yourself. The compiler-processed code will have something like this inserted: 
+It is created by the Java compiler if you don't specify it yourself.
+The compiler-processed code will have something like this inserted:
 
-```java
+``` {.java}
 public Cell() {}
 ```
 
@@ -413,11 +555,11 @@ More on constructors in later chapters.
 
 Inheritance is one of the key features of object-oriented programming.
 
-This is a very powerful mechanism to introduce new or adjusted behavior in a software system because subclasses inherit all properties and methods of their superclass. 
-For example, the `CancerCell` class below `extends Cell` and thus declares itself to be a **_subclass_** of `Cell`. 
-It not only extends itself with new functionality (`move()`), but also modifies the behavior of the `grow()` method by changing the `growthIncrement` property of its _supertype part_.
+This is a very powerful mechanism to introduce new or adjusted behavior in a software system because subclasses inherit all properties and methods of their superclass.
+For example, the `CancerCell` class below `extends Cell` and thus declares itself to be a ***subclass*** of `Cell`.
+It not only extends itself with new functionality (`move()`), but also modifies the behavior of the `grow()` method by changing the `growthIncrement` property of its *supertype part*.
 
-```java
+``` {.java}
 //Cell.java
 class Cell {
     int diameter = 5;
@@ -434,7 +576,7 @@ class Cell {
 }
 ```
 
-```java
+``` {.java}
 //CancerCell.java
 public class CancerCell extends Cell {
     CancerCell() {
@@ -447,7 +589,7 @@ public class CancerCell extends Cell {
 }
 ```
 
-```java
+``` {.java}
 //usage within GrowthSimulator
 Cell cell = new Cell();
 cell.grow();
@@ -461,6 +603,7 @@ cCell.move();
 
 output:
 
+```{=html}
 <pre class="console_out">
 I am a Cell. My size is 6
 I am a Cell. My size is 7
@@ -469,5 +612,5 @@ I am a Cell. My size is 8
 I am a Cell. My size is 11
 Moving through the body
 </pre>
-
+```
 This is of course not the only place where we'll see inheritance discussed.
