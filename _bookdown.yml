@@ -20,6 +20,7 @@ rmd_files: [
             "03_apis/interfaces.md",
             "03_apis/collections.md",
             "03_apis/class_object_methods.md",
+            "03_apis/records.md",
             "03_apis/sorting.md",
             "03_apis/exceptions.md",
             "03_apis/io.md",
